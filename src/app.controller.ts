@@ -12,9 +12,9 @@ export class AppController {
   @HttpCode(HttpStatus.OK)
   async login(@Res() res: Response, @Body() user: IUser) {
     const [loginPage, browserInstance] = await this.appService.login(user);
-    const result = await this.appService.SiiScraper(loginPage);
+    const userInfo = await this.appService.SiiScraper(loginPage);
 
-    browserInstance.close();
-    return res.json(result);
+    browserInstance?.close();
+    return res.json(userInfo);
   }
 }

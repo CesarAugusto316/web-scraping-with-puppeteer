@@ -8,7 +8,7 @@ import { CredentialsWrong } from './helpers/credentialsWrong';
 @Injectable()
 export class AppService {
   async login(user: IUser): Promise<[Page, Browser]> {
-    const browser = await puppeteer.launch({ headless: 'new' }); // change to false for headless mode
+    const browser = await puppeteer.launch({ headless: 'new' }); // change to false for full browser mode
     const loginPage = await browser.newPage();
     await loginPage.goto(loginApiUrl);
     await loginPage.setViewport({ width: 1080, height: 1024 });
@@ -18,11 +18,11 @@ export class AppService {
     const enterSelector = '#bt_ingresar';
     await loginPage.waitForSelector(enterSelector);
 
-    const [result] = await Promise.all([
+    const [loggedMainPage] = await Promise.all([
       loginPage.waitForNavigation(),
       loginPage.click(enterSelector),
     ]);
-    if (result.url() !== loggedInApiUrl) {
+    if (loggedMainPage.url() !== loggedInApiUrl) {
       throw new CredentialsWrong();
     }
     // el.dispose();
